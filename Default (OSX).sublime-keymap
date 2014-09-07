@@ -1,0 +1,32 @@
+[  
+    { "keys": ["z", "1"], "command": "vintage_spell",
+        "args": {"mode": "replace_first"},
+        "context": 
+        [
+            { "key": "setting.command_mode", "operand": true},
+            { "key": "setting.is_widget", "operand": false }
+        ]
+    },
+    { "keys": ["z", "="], "command": "vintage_spell",
+        "args": {"mode": "show_list"},
+        "context": 
+        [
+            { "key": "setting.command_mode", "operand": true},
+            { "key": "setting.is_widget", "operand": false }
+        ]
+    },
+    { "keys": ["]", "s"], "command": "next_misspelling",
+        "context":
+        [
+            { "key": "setting.command_mode", "operand": true},
+            { "key": "setting.is_widget", "operand": false }
+        ]
+    },
+    { "keys": ["[", "s"], "command": "prev_misspelling",
+        "context":
+        [
+            { "key": "setting.command_mode", "operand": true},
+            { "key": "setting.is_widget", "operand": false }
+        ]
+    }   
+] 
