@@ -28,8 +28,11 @@ class VintageSpellCommand(sublime_plugin.TextCommand):
         if self.dictionary.spell(text) == True:
             return
         else:
-            suggestions = self.dictionary.suggest(text)
-            if mode == 'replace_first':
-                replace(suggestions[0])
-            elif mode == 'show_list':
-                show_list(text, suggestions) 
+            try:
+                suggestions = self.dictionary.suggest(text)
+                if mode == 'replace_first':
+                    replace(suggestions[0])
+                elif mode == 'show_list':
+                    show_list(text, suggestions)
+            except IndexError:
+                pass
