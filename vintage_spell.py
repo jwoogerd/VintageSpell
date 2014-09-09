@@ -12,27 +12,24 @@ class VintageSpellCommand(sublime_plugin.TextCommand):
         word = self.view.word(region)
         text = self.view.substr(word)
 
-        def replace(selection):
+        def replaceWith(selection):
             self.view.replace(edit, word, selection)
 
         def show_list(text, suggestions):
             def on_done(index):
-                if index == -1:
-                    return
-                else:
-                    replace(suggestions[index])
+                if index > -1:
+                    replaceWith(suggestions[index])
 
             self.view.window().show_quick_panel(
                 suggestions, on_done, sublime.MONOSPACE_FONT)
 
-        if self.dictionary.spell(text) == True:
-            return
-        else:
+        if self.dictionary.spell(text) == False:
             try:
                 suggestions = self.dictionary.suggest(text)
+                selection = suggestions[0]
                 if mode == 'replace_first':
-                    replace(suggestions[0])
+                    replaceWith(selection)
                 elif mode == 'show_list':
                     show_list(text, suggestions)
             except IndexError:
-                pass
+                sublime.status_message('No spelling suggestions') 
