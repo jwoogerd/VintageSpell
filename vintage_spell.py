@@ -5,7 +5,9 @@ class VintageSpellCommand(sublime_plugin.TextCommand):
 
     def __init__(self, view):
         sublime_plugin.TextCommand.__init__(self, view)
-        self.dictionary = hunspell.HunSpell('./en_US.dic', './en_US.aff')
+        self.dictionary = hunspell.HunSpell(
+        '../Language - English/en_US.dic',
+        '../Language - English/en_US.aff')
 
     def run(self, edit, mode):
         region = self.view.sel()[0]
