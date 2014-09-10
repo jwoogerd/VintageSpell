@@ -1,15 +1,14 @@
 import sublime_plugin, sublime
 import hunspell 
-from os import path
 
 class VintageSpellCommand(sublime_plugin.TextCommand):
 
     def __init__(self, view):
         sublime_plugin.TextCommand.__init__(self, view)
-        base = path.dirname(path.dirname(path.abspath(__file__)))
+        path = sublime.packages_path()
         self.dictionary = hunspell.HunSpell(
-        base + '/Language - English/en_US.dic',
-        base + '/Language - English/en_US.aff')
+        path + '/Language - English/en_US.dic',
+        path + '/Language - English/en_US.aff')
 
     def run(self, edit, mode):
         region = self.view.sel()[0]
