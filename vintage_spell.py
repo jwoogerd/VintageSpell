@@ -18,7 +18,7 @@ class VintageSpellCommand(sublime_plugin.TextCommand):
         def replaceWith(selection):
             self.view.replace(edit, word, selection)
 
-        def show_list(text, suggestions):
+        def show_list(suggestions):
             def on_done(index):
                 if index > -1:
                     replaceWith(suggestions[index])
@@ -33,6 +33,6 @@ class VintageSpellCommand(sublime_plugin.TextCommand):
                 if mode == 'replace_first':
                     replaceWith(selection)
                 elif mode == 'show_list':
-                    show_list(text, suggestions)
+                    show_list(suggestions)
             except IndexError:
                 sublime.status_message('No spelling suggestions') 
