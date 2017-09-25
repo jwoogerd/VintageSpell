@@ -1,38 +1,46 @@
-import sublime_plugin, sublime
-import hunspell 
+import os
+import sys
+
+import sublime
+import sublime_plugin
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "pyenchant"))
+import enchant
 
 class VintageSpellCommand(sublime_plugin.TextCommand):
 
     def __init__(self, view):
         sublime_plugin.TextCommand.__init__(self, view)
-        path = sublime.packages_path()
-        self.dictionary = hunspell.HunSpell(
-        path + '/Language - English/en_US.dic',
-        path + '/Language - English/en_US.aff')
+        # dictionary_path = view.settings().get("dictionary")
+        # path = sublime.packages_path()
+        self.dictionary = enchant.Dict("en_US")
+
 
     def run(self, edit, mode):
         region = self.view.sel()[0]
         word = self.view.word(region)
         text = self.view.substr(word)
 
-        def replaceWith(selection):
-            self.view.replace(edit, word, selection)
-
-        def show_list(suggestions):
-            def on_done(index):
-                if index > -1:
-                    replaceWith(suggestions[index])
-
-            self.view.window().show_quick_panel(
-                suggestions, on_done, sublime.MONOSPACE_FONT)
-
-        if self.dictionary.spell(text) == False:
+        if self.dictionary.check(text) == False:
             try:
                 suggestions = self.dictionary.suggest(text)
                 selection = suggestions[0]
                 if mode == 'replace_first':
-                    replaceWith(selection)
+                    self._replace_with(edit, word, selection)
                 elif mode == 'show_list':
-                    show_list(suggestions)
+                    self._show_list(edit, word, suggestions)
             except IndexError:
-                sublime.status_message('No spelling suggestions') 
+                sublime.status_message('No spelling suggestions')
+
+
+    def _replace_with(self, edit, word, selection):
+        self.view.replace(edit, word, selection)
+
+
+    def _show_list(self, edit, word, suggestions):
+        def on_done(index):
+            if index > -1:
+                self._replace_with(edit, word, suggestions[index])
+
+        self.view.window().show_quick_panel(
+            suggestions, on_done, sublime.MONOSPACE_FONT)
